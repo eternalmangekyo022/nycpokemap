@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes pulse {
+
+	0%,
+	25% {
+		background-color: #ffcc00;
+		transform: translateX(-10px);
+	}
+
+	50%,
+	75% {
+		background-color: #ff9933;
+		transform: translateX(10px);
+	}
+
+	100% {
+		background-color: #ffcc00;
+		transform: translateX(-10px);
+	}
+}
+
+.animate-pulse {
+	animation: pulse .6s infinite;
+}
