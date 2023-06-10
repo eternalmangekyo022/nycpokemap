@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import {
-  MapContainer,
-  TileLayer
-} from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 import SelectPos from './components/SelectPos'
 import CircleLoader from './components/CircleLoader'
 
@@ -38,12 +35,18 @@ export default function App() {
   const [markerPos, setMarkerPos] = useState<Coord2>({ lat: NYC[0], lng: NYC[1] });
 
   async function loadData() {
-    const { data: { raids: _raids }} = await axios.get<never, { data: { raids: Raid[] } }>('data.json');
-    const { data: _forms } = await axios.get('forms.json');
-    const { data: _moves } = await axios.get('moves.json')
-    setForms(_forms)
-    setMoves(_moves)
-    setRaids(_raids)
+    let raids: Raid[];
+    try {
+      raids = (await axios.get<never, { data: { raids: Raid[] } }>('data.json')).data.raids;
+    } catch {
+      raids = (await axios.get<never, { data: { raids: Raid[] } }>('https://sour-stoat-53.deno.dev/', { headers: { 'Content-Type': 'application/json' } })).data.raids
+      console.log(raids)
+    }
+    const { data: forms } = await axios.get('forms.json');
+    const { data: moves } = await axios.get('moves.json')
+    setForms(forms)
+    setMoves(moves)
+    setRaids(raids)
   }
 
   return <>
