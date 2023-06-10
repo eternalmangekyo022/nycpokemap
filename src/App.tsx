@@ -1,6 +1,5 @@
 import { useState } from 'react'
-//import axios from 'axios'
-import datas from './data.json'
+import axios from 'axios'
 import {
   MapContainer,
   TileLayer
@@ -30,10 +29,22 @@ import CircleLoader from './components/CircleLoader'
 export default function App() {
   const MAX = 13000
   const NYC = [40.757400090129245, -73.98296356201173] as [number, number];
-  const [location, setLocation] = useState<Coord | null>(null);
   const [raids, setRaids] = useState<Raid[]>([]);
+  const [forms, setForms] = useState<null | { [key: string]: string }>(null);
+  const [moves, setMoves] = useState<null | { [key: string]: string }>(null);
+
+  const [location, setLocation] = useState<Coord | null>(null);
   const [distTo, setDistTo] = useState(0);
   const [markerPos, setMarkerPos] = useState<Coord2>({ lat: NYC[0], lng: NYC[1] });
+
+  async function loadData() {
+    const { data: { raids: _raids }} = await axios.get<never, { data: { raids: Raid[] } }>('data.json');
+    const { data: _forms } = await axios.get('forms.json');
+    const { data: _moves } = await axios.get('moves.json')
+    setForms(_forms)
+    setMoves(_moves)
+    setRaids(_raids)
+  }
 
   return <>
     <div className='w-screen h-screen relative overflow-hidden'>
@@ -41,18 +52,18 @@ export default function App() {
         <div className='w-[90%] h-screen flex flex-col items-center relative left-1/2 -translate-x-1/2'>
           <header className='w-full h-[10%] border-b-2 flex items-center justify-start'>
             <button onClick={() => {setLocation(null); setRaids([])}}>
-            <div className="w-4 h-4 border-l-2 border-t-2 border-[#808080] transform -rotate-45"></div>
+            <div className="w-4 h-4 border-l-2 border-t-2 border-[#808080] transform -rotate-45" />
 
             </button>
           </header>
           <div className='w-full h-[90%]'>
             {raids.length === 0 ? <CircleLoader />: <>
-
+              {/** code here later */}
             </>}
           </div>
         </div>
       </>: <>
-      <MapContainer className='w-screen h-[90vh] border-b-2 border-b-black' id='map' center={NYC} zoom={11} doubleClickZoom={false} scrollWheelZoom={true}>
+      <MapContainer className='w-screen h-[90vh] border-b-2 border-b-black' id='map' center={NYC} zoom={13} doubleClickZoom={false} scrollWheelZoom={true}>
         <TileLayer 
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -68,7 +79,7 @@ export default function App() {
         onClick={() => {
           if(distTo < MAX) {
             setLocation([markerPos.lat, markerPos.lng])
-            setTimeout(() => setRaids(datas.raids as Raid[]), 600)
+            loadData()
           }
         }}
         style={{
