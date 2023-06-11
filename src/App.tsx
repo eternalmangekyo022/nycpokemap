@@ -27,7 +27,6 @@ export default function App() {
   const moves = useRef<{ [key: string]: string }>({});
   const teams = useRef<{ [key: string]: string }>({});
   const [maxRaids, setMaxRaids] = useState(36);
-  const level = [{}]
   // (Date.UTC(0, 0, 1) * -1 + Date.UTC(2023, 5, 10)) - Date.UTC(0, 0, 1) * -1 ----- today
 
   const [location, setLocation] = useState<Coord | null>(null);
@@ -39,6 +38,7 @@ export default function App() {
     try {
       raids = (await axios.get<never, { data: { raids: Raid[] } }>('data.json')).data.raids;
     } catch {
+      if(10 < Math.random()) setMaxRaids(0)
       raids = (await axios.get<never, { data: { raids: Raid[] } }>('https://sour-stoat-53.deno.dev/', { headers: { 'Content-Type': 'application/json' } })).data.raids
     }
     const { data: _forms } = await axios.get('forms.json');
