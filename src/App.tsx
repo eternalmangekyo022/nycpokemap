@@ -1,13 +1,16 @@
 import { useState, useRef } from 'react';
 import axios from 'axios'
-import { MapContainer, TileLayer } from 'react-leaflet'
 import SelectPos from './components/SelectPos'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import CircleLoader from './components/CircleLoader'
+import PokeImage from './components/PokeImage';
 import { tsp } from './hooks'
+
 
 // https://nycpokemap.com/raids.php
 // https://nycpokemap.com/json/moves.json
 // https://nycpokemap.com/json/forms.json
+// https://pokeapi.co/api/v2/
 
 /**
  * level 6 : mega
@@ -67,7 +70,7 @@ export default function App() {
           </header>
           <div className='w-full h-[90%]'>
             <div className='w-full h-16 border-b-2 flex justify-between items-center'>
-
+              {/** filters */}
             </div>
             <br />
             <div className='w-full h-[90%] overflow-y-scroll flex justify-center items-center flex-wrap gap-5'>
@@ -75,14 +78,21 @@ export default function App() {
                 {/** code here later */}
                 {raids.map((raid, idx) => {
                   if(idx < maxRaids) return <>
-                    <div className='w-[30rem] h-72 border-2 flex flex-col relative'>
+                    <div className='w-[30rem] h-[25rem] border-2 flex flex-col relative items-center justify-evenly'>
                       
                       {/** this goes to top */}
                       <span className='ml-2 mt-1 font-bold' style={{
                         color: getColorByTeam(raid.team)
                       }} >{teams.current[raid.team]}</span>
-                      <span>{raid.gym_name}</span>
-                      <span>{raid.pokemon_id}</span>
+                      <span>{raid.gym_name === '' ? '<Gym name missing>': raid.gym_name}</span>
+                      <PokeImage pokemon_id={raid.pokemon_id} />
+                      <MapContainer zoomControl={false} className='w-[90%] h-[50%]' center={[raid.lat, raid.lng]} zoom={12.5} scrollWheelZoom={false} doubleClickZoom={false}>
+                        <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+                        <Marker position={[raid.lat, raid.lng]}>
+                          <Popup className='w-72'>{raid.pokemon_id}</Popup>
+                        </Marker>
+                      </MapContainer>
+                      <br />
                       { /** this goes to bottom */}
                       <div className='absolute w-full bottom-0 h-[10%] border-t-2 flex items-center'>
                         <a target='_blank' href={`https://maps.google.com/maps?q=${raid.lat},${raid.lng}`} className='text-xs ml-[95%]'>
@@ -100,12 +110,8 @@ export default function App() {
           </div>
         </div>
       </>: <>
-      <MapContainer className='w-screen h-[90vh] border-b-2 border-b-black' id='map' center={NYC} zoom={13} doubleClickZoom={false} scrollWheelZoom={true}>
-        <TileLayer 
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
+      <MapContainer className='w-screen h-[90vh] border-b-2 border-b-black' center={NYC} zoom={13} doubleClickZoom={false} scrollWheelZoom={true}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <SelectPos pos={markerPos} setState={(dist, pos) => {
           setMarkerPos(pos)
           setDistTo(dist)
