@@ -1,5 +1,4 @@
 import { useState } from 'react'
-//import { v4 } from 'uuid'
 
 interface Props {
 	pokemon_id: number

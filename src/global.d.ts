@@ -1,8 +1,10 @@
 export {};
 
 declare global {
+	/* 
 	type Coord = [number, number]
 	type Coord2 = { lat: number, lng: number };
+	*/
 
 	interface Raid {
 		gym_name: string
@@ -18,8 +20,8 @@ declare global {
 		level: number
 		cp: number
 		team: number
-		move1: number
-		move2: number
+		move1: string
+		move2: string
 		is_exclusive: 0 | 1
 		form: number
 		gender: number
