@@ -36,8 +36,11 @@ export default function App() {
 
   async function loadData(location: Coord) {
     let raids: Raid[];
-    if(process.env.NODE_ENV === 'development') raids = (await axios.get<never, { data: { raids: Raid[] } }>('data.json')).data.raids;
-    else raids = (await axios.get<never, { data: { raids: Raid[] } }>('https://sour-stoat-53.deno.dev/', { headers: { 'Content-Type': 'application/json' } })).data.raids
+    try {
+      raids = (await axios.get<never, { data: { raids: Raid[] } }>('data.json')).data.raids;
+    } catch {
+      raids = (await axios.get<never, { data: { raids: Raid[] } }>('https://sour-stoat-53.deno.dev/', { headers: { 'Content-Type': 'application/json' } })).data.raids;
+    }
     
     if(10 < Math.random()) setMaxRaids(0)
     const { data: _forms } = await axios.get('forms.json');
