@@ -58,8 +58,7 @@ export default function App() {
         <div className='w-[90%] h-screen flex flex-col items-center relative left-1/2 -translate-x-1/2'>
           <header className='w-full h-[10%] border-b-2 flex items-center justify-start'>
             <button onClick={() => {setLocation(null); setRaids([])}}>
-            <div className="w-4 h-4 border-l-2 border-t-2 border-[#808080] transform -rotate-45" />
-
+              <div className="w-4 h-4 border-l-2 border-t-2 border-[#808080] transform -rotate-45" />
             </button>
           </header>
           <div className='w-full h-[90%]'>
@@ -78,7 +77,7 @@ export default function App() {
       </>: <>
       <MapContainer ref={mapRef as React.Ref<Map>} className='w-screen h-[90vh] border-b-2 border-b-black' center={NYC} zoom={13} doubleClickZoom={false} scrollWheelZoom={true}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <SelectPos pos={markerPos} setState={(dist, pos) => {
+        <SelectPos pos={markerPos} handler={(dist, pos) => {
           setMarkerPos(pos)
           setDistTo(dist)
         }} />

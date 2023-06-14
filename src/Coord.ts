@@ -7,6 +7,5 @@ export default class Coord {
 	}
 	
 	toList = () => [this.lat, this.lng]
-  
 	toObj = () => ({ lat: this.lat, lng: this.lng })
 }

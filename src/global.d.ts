@@ -1,11 +1,6 @@
 export {};
 
 declare global {
-	/* 
-	type Coord = [number, number]
-	type Coord2 = { lat: number, lng: number };
-	*/
-
 	interface Raid {
 		gym_name: string
 		cell_id: null | number

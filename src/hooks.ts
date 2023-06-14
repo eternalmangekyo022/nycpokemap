@@ -16,7 +16,7 @@ function getDistance(from: Coord, to: Coord): number {
   return distance;
 }
 
-function useTSP(pos: Coord, raids: Raid[], amount = 10): Raid[] {
+function tsp(pos: Coord, raids: Raid[], amount = 10): Raid[] {
 	let final: Raid[] = [];
 	let added: number[] = [];
 	
@@ -36,9 +36,8 @@ function useTSP(pos: Coord, raids: Raid[], amount = 10): Raid[] {
 		final = [...final, smallest]
 		added = [...added, idx]
 	}
-
 	return final;
 }
 
-export { useTSP as tsp };
+export { tsp };
 
