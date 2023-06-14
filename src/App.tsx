@@ -25,7 +25,8 @@ export default function App() {
   const NYC = [40.757400090129245, -73.98296356201173] as [number, number];
   const mapRef = useRef<Map>();
   const [raids, setRaids] = useState<Raid[]>([]);
-  const [maxRaids, setMaxRaids] = useState(36);
+  //const [maxRaids, setMaxRaids] = useState(36);
+  const maxRaids = 36;
   // (Date.UTC(0, 0, 1) * -1 + Date.UTC(2023, 5, 10)) - Date.UTC(0, 0, 1) * -1 ----- today
   const [location, setLocation] = useState<Coord | null>(null);
   const [distTo, setDistTo] = useState(0);
@@ -37,12 +38,11 @@ export default function App() {
   async function loadData(location: Coord) {
     let raids: Raid[];
     try {
-      raids = (await axios.get<never, { data: { raids: Raid[] } }>('data.json')).data.raids;
+      raids = (await axios.get<{ raids: Raid[] }>('data.json')).data.raids;
     } catch {
-      raids = (await axios.get<never, { data: { raids: Raid[] } }>('https://sour-stoat-53.deno.dev/', { headers: { 'Content-Type': 'application/json' } })).data.raids;
+      raids = (await axios.get<{ raids: Raid[] }>('https://sour-stoat-53.deno.dev/', { headers: { 'Content-Type': 'application/json' } })).data.raids;
     }
     
-    if(10 < Math.random()) setMaxRaids(0)
     const { data: _forms } = await axios.get('forms.json');
     const { data: _moves } = await axios.get('moves.json');
     const { data: _teams } = await axios.get('teams.json');
